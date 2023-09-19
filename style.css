@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono&display=swap');
+:root{
+    --bgColor: #333;
+    --textPrimary: #fff;
+    --textSecondary: #666;
+    --primaryColor: #fd4;
+}
+body{
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bgColor);
+    color: var(--textPrimary);
+    font-size: 1.5rem;
+}
+main{
+    width: 600px;
+    margin: 10px auto;
+}
+h1{
+    color: var(--primaryColor)
+}
+h1 svg{
+    width: 40px;
+    fill: var(--primaryColor);
+    vertical-align: -20px;
+    padding: 0 10px;
+}
+#header{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 20px 6px 30px;
+}
+#buttons{
+    text-align: right;
+}
+#info{
+    color: var(--primaryColor);
+
+}
+button{
+    background: rgba(255,255,255, .2);
+    border: 0;
+    color: rgba(255, 255, 255, .5);
+    padding: 5px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+div.word{
+    display: inline-block;
+    font-family: "Roboto Mono", monospace;
+    margin: 0 5px;
+}
+div#game{
+    position: relative;
+    line-height: 35px;
+    height: 105px;
+    overflow: hidden;
+    border: none;
+}
+#game:focus #words{
+    filter: blur(0);
+}
+#words{
+    filter: blur(5px);
+    color: var(--textSecondary);
+    border: none;
+}
+#focus-error{
+    position: absolute;
+    inset: 0;
+    text-align: center;
+    margin-top: 35px;
+}
+
+#game:focus #focus-error{
+    display: none;
+}
+.letter.correct{
+    color: #fff;
+}
+.letter.incorrect{
+    color: #f55;
+}
+@keyframes blink{
+    0%{
+        opacity: 1;
+    }
+    50%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+#cursor {
+    display: none;
+    width: 2px;
+    height: 1.6rem;
+    background: var(--primaryColor);
+    position: fixed;
+    top: 228px;
+    left: 470px;
+    animation: blink 1s infinite;
+}
+
+#game:focus #cursor {
+    display: block;
+}
+
+div#game:focus{
+    outline: 0;
+}
