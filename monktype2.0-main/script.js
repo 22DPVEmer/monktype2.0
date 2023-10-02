@@ -68,6 +68,20 @@ document.getElementById("game").addEventListener("keyup", (ev)=>{
         }
         addClass(currentWord.nextSibling.firstChild,"current")
     }
+    if(ev.key == "Backspace"){
+
+        removeClass(currentLetter,"current")
+        removeClass(currentLetter,"correct")
+        removeClass(currentLetter,"incorrect")
+        if(currentLetter.classList.contains("extra")){
+            currentLetter.remove();
+        }
+        querySelector(#word).style.color = var(--textSecondary);
+        addClass(currentWord.previousSibling.firstChild,"current")
+        
+
+    }
+
 
     
     const nextLetter = document.querySelector('.letter.current');
