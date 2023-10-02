@@ -3,52 +3,111 @@ const wordsCount = words.length;
 
 function randomWord(){
     const random = Math.ceil(Math.random() * wordsCount);
-    return words[random -1]
+    return words[random -1];
 }
 
 function formatWord(word) {
-    const letters = word.split("").map(letter => `<span class="letter">${letter}</span>`);
-    return `<div class='word'>${letters.join("")}</div>`;
-  }
-
-function addClass(el,name){
-    el.className += " "+name;
+    const letters = word.split('').map(letter => `<span class='letter'>${letter}</span>`);
+    return `<div class='word'>${letters.join('')}</div>`;
 }
-function removeClass(el,name){
-    el.className = el.className.replace(name,"")
-} 
-function newGame(){
-    document.getElementById('words').innerHTML = "";
-    for(let i=0; i< 200; i++){
+
+function addClass(el, name) {
+    if (el) {
+        el.className += ' ' + name;
+    }
+}
+
+function removeClass(el, name) {
+    el.className = el.className.replace(name, '');
+}
+
+function newGame() {
+    document.getElementById('words').innerHTML = '';
+    for (let i = 0; i < 200; i++) {
         document.getElementById('words').innerHTML += formatWord(randomWord());
-
     }
-    addClass(document.querySelector(".word"), "current");
-    addClass(document.querySelector(".letter"),"current")
+    addClass(document.querySelector('.word'), 'current');
+    addClass(document.querySelector('.letter'), 'current');
 }
 
-document.getElementById("game").addEventListener("keyup", (ev)=>{
+document.getElementById('game').addEventListener('keydown', ev => {
     const key = ev.key;
-    const currentLetter = document.querySelector(".letter.current");
-    const expected = currentLetter.innerHTML;
-    const isSpace = key === " ";
+    const currentWord = document.querySelector('.word.current');
+    // Iespejams tpc nestradaja//
+    const currentLetter = document.querySelector('.letter.current');
+    const expected = currentLetter?.innerHTML || ' ';
+    const isBackspace = key === 'Backspace';
+    const isSpace = key === ' ';
+    const firstLetter = currentLetter === currentWord.firstChild;
+
+    const isLetter = key.length === 1 && key !== ' ';
+
+    console.log({ key, expected });
+
+    if (isLetter) {
+        if (currentLetter) {
+            addClass(currentLetter, key === expected ? 'correct' : 'incorrect');
+            removeClass(currentLetter, 'current');
+            addClass(currentLetter.nextSibling, 'current');
+        } else {
+            const incorrectLetter = document.createElement('span');
+            incorrectLetter.innerHTML = key;
+            incorrectLetter.className = 'letter incorrect extra';
+            currentWord.appendChild(incorrectLetter);
+        }
+    }
+    if (isSpace) {
+        if (expected !== ' ') {
+            const lettersToInvalidate = [...document.querySelectorAll('.word.current .letter:not(.correct)')];
+            lettersToInvalidate.forEach(letter => {
+                addClass(letter, 'incorrect');
+            });
+        }
+        removeClass(currentWord, 'current');
+        addClass(currentWord.nextSibling, 'current');
+        if (currentLetter) {
+            removeClass(currentLetter, 'current');
+        }
+        addClass(currentWord.nextSibling.firstChild, 'current');
+    }if (isBackspace) {
+        if (currentLetter && firstLetter) {
+            removeClass(currentWord, 'current');
+            if (currentWord.previousSibling) {
+                addClass(currentWord.previousSibling, 'current');
+                const lastChild = currentWord.previousSibling.lastChild;
+                if (lastChild) {
+                    addClass(lastChild, 'current');
+                    removeClass(lastChild, 'incorrect');
+                    removeClass(lastChild, 'correct');
+                }
+            }
+            removeClass(currentLetter, 'current');
+        } else if (currentLetter && !firstLetter) {
+            removeClass(currentLetter, 'current');
+            addClass(currentLetter.previousSibling, 'current');
+            removeClass(currentLetter.previousSibling, 'correct');
+            removeClass(currentLetter.previousSibling, 'incorrect');
+        } else if (!currentLetter) {
+            addClass(currentWord.lastChild, 'current');
+            removeClass(currentWord.lastChild, 'incorrect');
+            removeClass(currentWord.lastChild, 'correct');
+
+            const extraElements = currentWord.querySelectorAll('.extra');
+            if (extraElements.length > 0) {
+                const lastExtraElement = extraElements[extraElements.length - 1];
+                lastExtraElement.remove();
+        }
+        }
+    }
     
-    const isLetter = key.length === 1 && key !==" ";
+    
+    
 
-    console.log({key,expected})
-
-    if(isLetter){
-        if(currentLetter){
-            addClass(currentLetter,key=== expected ? 'correct': 'incorrect')
-            removeClass(currentLetter,'current');
-            addClass(currentLetter.nextSibling, 'current')
-        }
-    }
-    else if(isSpace){
-        if(expected !== " "){
-            const lettersToInvalidate = document.querySelectorAll(".word.current .letter:not(.correct)")
-        }
-    }
-})
+    const nextLetter = document.querySelector('.letter.current');
+    const nextWord = document.querySelector('.word.current');
+    const cursor = document.getElementById('cursor');
+    cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top + 2 + 'px';
+    cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'] + 'px';
+});
 
 newGame();
