@@ -30,26 +30,29 @@ function newGame() {
     addClass(document.querySelector('.letter'), 'current');
 }
 
+
+let currentWordIndex = 1; // Initialize the index of the current word.
+
 document.getElementById('game').addEventListener('keydown', ev => {
     const key = ev.key;
     const currentWord = document.querySelector('.word.current');
-    // Iespejams tpc nestradaja//
     const currentLetter = document.querySelector('.letter.current');
     const expected = currentLetter?.innerHTML || ' ';
     const isBackspace = key === 'Backspace';
     const isSpace = key === ' ';
-    const firstLetter = currentLetter === currentWord.firstChild;
-
+    const firstLetter = currentLetter === (currentWord?.firstChild || undefined);
+    //const firstLetter = currentLetter === currentWord?.firstChild;
     const isLetter = key.length === 1 && key !== ' ';
 
     console.log({ key, expected });
+    console.log('Current Word:', currentWordIndex); // Log the current word index.
 
     if (isLetter) {
         if (currentLetter) {
             addClass(currentLetter, key === expected ? 'correct' : 'incorrect');
             removeClass(currentLetter, 'current');
             addClass(currentLetter.nextSibling, 'current');
-        } else {
+        } else if(!currentLetter){
             const incorrectLetter = document.createElement('span');
             incorrectLetter.innerHTML = key;
             incorrectLetter.className = 'letter incorrect extra';
@@ -69,7 +72,9 @@ document.getElementById('game').addEventListener('keydown', ev => {
             removeClass(currentLetter, 'current');
         }
         addClass(currentWord.nextSibling.firstChild, 'current');
-    }if (isBackspace) {
+        currentWordIndex++; // Increment the current word index.
+    }
+    if (isBackspace) {
         if (currentLetter && firstLetter) {
             removeClass(currentWord, 'current');
             if (currentWord.previousSibling) {
@@ -82,32 +87,65 @@ document.getElementById('game').addEventListener('keydown', ev => {
                 }
             }
             removeClass(currentLetter, 'current');
+            if (currentWordIndex > 1) {
+                currentWordIndex--; // Decrement the current word index if possible.
+            }
+            
+            
+            /*if (isBackspace){
+                if (currentLetter && firstLetter) {
+                    if (currentWord?.previousSibling && (isLetter || currentWordIndex > 1)) {
+                        // Move to the previous word if it exists.
+                        removeClass(currentWord, 'current');
+                        addClass(currentWord.previousSibling, 'current');
+                        const lastChild = currentWord.previousSibling.lastChild;
+                        if (lastChild) {
+                            addClass(lastChild, 'current');
+                            removeClass(lastChild, 'incorrect');
+                            removeClass(lastChild, 'correct');
+                        }
+                    }
+                    removeClass(currentLetter, 'current');
+                    if (currentWordIndex > 1) {
+                        currentWordIndex--;
+            }*/
+
         } else if (currentLetter && !firstLetter) {
             removeClass(currentLetter, 'current');
             addClass(currentLetter.previousSibling, 'current');
             removeClass(currentLetter.previousSibling, 'correct');
             removeClass(currentLetter.previousSibling, 'incorrect');
         } else if (!currentLetter) {
-            addClass(currentWord.lastChild, 'current');
-            removeClass(currentWord.lastChild, 'incorrect');
-            removeClass(currentWord.lastChild, 'correct');
+            if(currentWord && currentWord.lastChild !== null){
+                addClass(currentWord.lastChild, 'current');
+                removeClass(currentWord.lastChild, 'incorrect');
+                removeClass(currentWord.lastChild, 'correct');
+            }else{
+                console.log("nothing happens")
+            }
+
 
             const extraElements = currentWord.querySelectorAll('.extra');
             if (extraElements.length > 0) {
                 const lastExtraElement = extraElements[extraElements.length - 1];
                 lastExtraElement.remove();
-        }
+            }
         }
     }
-    
-    
-    
 
-    const nextLetter = document.querySelector('.letter.current');
-    const nextWord = document.querySelector('.word.current');
-    const cursor = document.getElementById('cursor');
+const nextLetter = document.querySelector('.letter.current');
+const nextWord = document.querySelector('.word.current');
+const cursor = document.getElementById('cursor');
+
+if (nextLetter || nextWord) {
+    // Check if either nextLetter or nextWord is defined before accessing properties.
     cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top + 2 + 'px';
     cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'] + 'px';
-});
+} else {
+    // Handle the case where neither nextLetter nor nextWord is defined.
+    // You can choose to hide or disable the cursor or take other appropriate actions.
+    cursor.style.display = 'none'; // For example, hide the cursor.
+}
 
+});
 newGame();
