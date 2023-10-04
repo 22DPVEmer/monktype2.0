@@ -19,6 +19,7 @@ function addClass(el, name) {
 
 function removeClass(el, name) {
     el.className = el.className.replace(name, '');
+    
 }
 
 function newGame() {
@@ -76,6 +77,7 @@ document.getElementById('game').addEventListener('keydown', ev => {
     }
     if (isBackspace) {
         if (currentLetter && firstLetter) {
+            
             removeClass(currentWord, 'current');
             if (currentWord.previousSibling) {
                 addClass(currentWord.previousSibling, 'current');
@@ -89,6 +91,7 @@ document.getElementById('game').addEventListener('keydown', ev => {
             removeClass(currentLetter, 'current');
             if (currentWordIndex > 1) {
                 currentWordIndex--; // Decrement the current word index if possible.
+                //varbut sheit kaut kas
             }
             
             
@@ -110,18 +113,28 @@ document.getElementById('game').addEventListener('keydown', ev => {
                         currentWordIndex--;
             }*/
 
-        } else if (currentLetter && !firstLetter) {
-            removeClass(currentLetter, 'current');
-            addClass(currentLetter.previousSibling, 'current');
+        } else if (currentLetter) {
+
+
+            //removeClass(currentLetter, 'current');
+            addClass(currentWord.lastChild, 'current');
+            //addClass(currentLetter.previousSibling, 'current');
+            // zem shita met errorus
+
             removeClass(currentLetter.previousSibling, 'correct');
             removeClass(currentLetter.previousSibling, 'incorrect');
+
+            const extraElements = currentWord.querySelectorAll('.extra');
+            if (extraElements.length > 0) {
+                const lastExtraElement = extraElements[extraElements.length - 1];
+                lastExtraElement.remove();
+            }
+
         } else if (!currentLetter) {
             if(currentWord && currentWord.lastChild !== null){
                 addClass(currentWord.lastChild, 'current');
                 removeClass(currentWord.lastChild, 'incorrect');
                 removeClass(currentWord.lastChild, 'correct');
-            }else{
-                console.log("nothing happens")
             }
 
 
