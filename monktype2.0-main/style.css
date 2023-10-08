@@ -3,8 +3,7 @@
     --bgColor: #333;
     --textPrimary: #fff;
     --textSecondary: #666;
-    --primaryColor: #39FF14;
-
+    --primaryColor: #0000FF;
 }
 body{
     font-family: 'Roboto', sans-serif;
@@ -13,7 +12,7 @@ body{
     font-size: 1.5rem;
 }
 main{
-    width: 80%;
+    width: 600px;
     margin: 10px auto;
 }
 h1{
@@ -124,7 +123,7 @@ div#game:focus{
 }
 
 .options{
-    background-color: rgba(0, 0, 0, 0.74);
+    background-color: rgba(0, 0, 0, 0.719);
     display: flex;
     justify-content: space-between;
     align-items: center; 
@@ -132,42 +131,6 @@ div#game:focus{
 }
 
 .option-element{
-    color: var(--primaryColor);
     font-size: 20px;
     margin: 10px 10px;
-}
-
-
-div.options .option-element a {
-    color: var(--primaryColor);
-    text-decoration: none;
-}
-
-div.options .option-element a:hover {
-    color: white;
-    text-decoration: none; 
-}
-
-
-
-#header svg{
-    width: 60px;
-    fill: var(--textSecondary);
-    vertical-align: -20px;
-    padding: 0 10px;
-}
-
-div svg:hover{
-    fill: #fff;
-}
-
-.option-element a svg{
-    margin-right: 5px;
-    fill: var(--textSecondary);
-}
-
-.option-element:hover svg,
-.option-element:hover a {
-  color: var(--primaryColor); /* Change both SVG and text color on hover */
-  fill: var(--primaryColor); /* Change SVG fill color on hover */
 }
